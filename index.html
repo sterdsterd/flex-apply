@@ -6,70 +6,605 @@
   <title>FLEX</title>
 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+  <script src="js/josa.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      $('select').formSelect();
+      $('.modal').modal();
+      $("#info").hide();
+      $("#step2").hide();
+      $("#step3").hide();
+      $("#step4").hide();
+      $("#step1").hide().fadeIn(500);
+    });
+
+    function s1to2() {
+      $("#step1").fadeOut(500);
+      $("#step2").delay(400).fadeIn(500);
+    }
+
+    function s2to1() {
+      $("#step2").fadeOut(500);
+      $("#step1").delay(400).fadeIn(500);
+    }
+
+    function s2to3() {
+      $("#step2").fadeOut(500);
+      $("#step3").delay(400).fadeIn(500);
+      $("#info").delay(400).fadeIn(500);
+    }
+
+    function s3to2() {
+      $("#step3").fadeOut(500);
+      $("#step2").delay(400).fadeIn(500);
+    }
+
+    function s3to4() {
+      $("#step3").fadeOut(500);
+      $("#step4").delay(400).fadeIn(500);
+    }
+
+    function isNum(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    function mod1() {
+        var gr = document.getElementById("grade").options[document.getElementById("grade").selectedIndex].value;
+        var cl = document.getElementById("class").value;
+        var nu = document.getElementById("number").value;
+        var na = document.getElementById("name").value;
+
+        var instance = M.Modal.getInstance(document.getElementById("modal1"));
+
+        if (cl == "" || nu == "" || na == "") {
+          M.toast({html: '인적사항을 입력해주세요'});
+        } else if (!isNum(cl) || !isNum(nu)) {
+          M.toast({html: '학반과 번호는 숫자로만 입력해주세요'});
+        } else {
+          document.getElementById("modal_title").innerText = gr + "학년 " + cl + "반 " + nu + "번 " + Josa.r(na, '이가') + " 맞나요?";
+          document.getElementById("infotx").innerHTML = '<i class="material-icons left">person</i>' + gr + "학년 " + cl + "반 " + nu + "번 " + na;
+
+          instance.open();
+
+        }
+        
+    }
+
+    function getSc() {
+      var answer = [2, 2, 4, 3, 4, 2, 3, 3, 4, 5, 4, 3, 2, 5, 4];
+      var score = [1.5, 2.2, 1.6, 1.6, 1.6, 1.8, 1.8, 2.2, 1.9, 2.5, 2.5, 2.3, 2.5, 2.5, 2.5];
+      var tot = 0;
+      for (var i = 1; i <= 15; i++) {
+        if ($('input[name="problem' + i + '"]:checked').val() == answer[i - 1]) tot += score[i - 1];
+      }
+      if ($("#16").val().trim() == "9") tot += 3;
+
+      if ($("#17").val().trim() == "4") tot += 4;
+      
+      var p18 = 0
+      if ($("#18a").val().replace(/\s/g, "") == "j<=n-i") p18++;
+      if ($("#18b").val().replace(/\s/g, "") == "j<=2*i-1") p18++;
+      if (p18 == 1) tot += 2;
+      else if (p18 == 2) tot += 5;
+      
+      var p19 = 0
+      if ($("#19a").val().replace(/\s/g, "") == "ㅇ") p19++;
+      if ($("#19b").val().replace(/\s/g, "") == "ㅈ") p19++;
+      if ($("#19c").val().replace(/\s/g, "") == "ㅋ") p19++;
+      if (p19 == 1) tot += 2;
+      else if (p19 == 2) tot += 4;
+      else if (p19 == 3) tot += 7;
+      
+      M.toast({html: tot + '점'});
+
+      var instance = M.Modal.getInstance(document.getElementById("modal2"));
+      instance.open();
+    }
+  </script>
 </head>
 <body>
-  <!--nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Logo</a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="#">Navbar Link</a></li>
-      </ul>
-
-      <ul id="nav-mobile" class="sidenav">
-        <li><a href="#">Navbar Link</a></li>
-      </ul>
-      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-    </div>
-  </nav-->
-  <div class="section no-pad-bot centre" id="index-banner">
+  <div id="info" style="background-color: rgba(0, 0, 0, 0.01); box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.075);">
+    <p style="padding: 1em; margin: 0;" id="infotx"></p>
+  </div>
+  <div id="step1" class="section no-pad-bot centre">
     <div class="container">
-      <h1 class="header center blue-text">환영합니다</h1>
+      <h1 id="title" class="header center blue-text">환영합니다</h1>
       <div class="row center">
-        <h5 class="header col s12 light">환영할까요?</h5>
+        <h5 id="desc" class="header col s12 light">FLEX 입부 시험</h5>
       </div>
       <br>
       <div class="row center">
-        <a href="/step1" id="start-button" class="btn-large waves-effect waves-light blue">시작하기<i class="material-icons right">navigate_next</i></a>
+        <a onclick="s1to2()" id="start-button" class="btn-large waves-effect waves-light blue">시작하기<i class="material-icons right">navigate_next</i></a>
+      </div>
+    </div>
+  </div>
+  <div class="section no-pad-bot centre" id="step2">
+    <div class="container">
+      <h1 class="header center blue-text">인적사항을 입력해주세요</h1>
+      <br>
+      <div class="row center">
+        <div class="row">
+          <div class="input-field col s3">
+            <select id="grade">
+              <option value="1" selected>1학년</option>
+              <option value="2">2학년</option>
+            </select>
+            <label>학년</label>
+          </div>
+          <div class="input-field col s3">
+            <input id="class" type="text">
+            <label for="class">학반</label>
+          </div>
+          <div class="input-field col s3">
+            <input id="number" type="text">
+            <label for="number">번호</label>
+          </div>
+          <div class="input-field col s3">
+            <input id="name" type="text">
+            <label for="name">이름</label>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row center">
+        <a id="next-button" onclick="s2to1()" class="btn-large modal-trigger waves-effect waves-light blue"><i class="material-icons left">navigate_before</i>이전</a>
+        <a id="next-button" onclick="mod1()" class="btn-large modal-trigger waves-effect waves-light blue">다음<i class="material-icons right">navigate_next</i></a>
+      </div>
+      <div id="modal1" class="modal">
+        <div class="modal-content">
+          <h4 id="modal_title">당신의 정보가 맞나요?</h4>
+          <p>틀릴 경우 수정해주세요. 수정을 하지 않아 발생한 불이익은 책임지지 않습니다.</p>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="modal-close waves-effect blue-text btn-flat">수정할래요</a>
+          <a id="positive" onclick="s2to3()" class="modal-close waves-effect blue-text btn-flat">맞아요</a>
+        </div>
       </div>
     </div>
   </div>
 
-
-  <!--div class="container">
-    <div class="section">
-      <div class="row">
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center light-blue-text"><i class="material-icons">flash_on</i></h2>
-            <h5 class="center">Speeds up development</h5>
-
-            <p class="light">We did most of the heavy lifting for you to provide a default stylings that incorporate our custom components. Additionally, we refined animations and transitions to provide a smoother experience for developers.</p>
+  <div class="section no-pad-bot centre" id="step3">
+    <div class="container">
+      <h1 class="header center blue-text">답안을 입력해주세요</h1>
+      <br>
+      <div class="row center">
+        <div class="row">
+          <div class="col s12 m6">
+            <div class="card white darken-1">
+              <div class="card-content black-text">
+                <span class="card-title" style="text-align: start;">선택형</span>
+                <br>
+                <div class="row">
+                  <div class="col s6">
+                    <form action="#">
+                      <p>
+                        01.
+                        <label>
+                          <input name="problem1" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem1" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem1" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem1" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem1" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <p>
+                        02.
+                        <label>
+                          <input name="problem2" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem2" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem2" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem2" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem2" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <p>
+                        03.
+                        <label>
+                          <input name="problem3" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem3" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem3" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem3" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem3" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <p>
+                        04.
+                        <label>
+                          <input name="problem4" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem4" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem4" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem4" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem4" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <p>
+                        05.
+                        <label>
+                          <input name="problem5" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem5" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem5" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem5" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem5" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <hr>
+                      <p>
+                        06.
+                        <label>
+                          <input name="problem6" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem6" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem6" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem6" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem6" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <p>
+                        07.
+                        <label>
+                          <input name="problem7" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem7" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem7" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem7" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem7" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <p>
+                        08.
+                        <label>
+                          <input name="problem8" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem8" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem8" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem8" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem8" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <p>
+                        09.
+                        <label>
+                          <input name="problem9" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem9" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem9" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem9" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem9" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <p>
+                        10.
+                        <label>
+                          <input name="problem10" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem10" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem10" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem10" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem10" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                    </form>
+                  </div>
+                  <div class="col s6">
+                    <form action="#">
+                      <p>
+                        11.
+                        <label>
+                          <input name="problem11" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem11" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem11" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem11" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem11" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <p>
+                        12.
+                        <label>
+                          <input name="problem12" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem12" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem12" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem12" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem12" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <p>
+                        13.
+                        <label>
+                          <input name="problem13" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem13" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem13" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem13" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem13" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <p>
+                        14.
+                        <label>
+                          <input name="problem14" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem14" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem14" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem14" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem14" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <p>
+                        15.
+                        <label>
+                          <input name="problem15" type="radio" value="1" />
+                          <span>1</span>
+                        </label>
+                        <label>
+                          <input name="problem15" type="radio" value="2"/>
+                          <span>2</span>
+                        </label>
+                        <label>
+                          <input name="problem15" type="radio" value="3"/>
+                          <span>3</span>
+                        </label>
+                        <label>
+                          <input name="problem15" type="radio" value="4"/>
+                          <span>4</span>
+                        </label>
+                        <label>
+                          <input name="problem15" type="radio" value="5"/>
+                          <span>5</span>
+                        </label>
+                      </p>
+                      <hr>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
           </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center light-blue-text"><i class="material-icons">group</i></h2>
-            <h5 class="center">User Experience Focused</h5>
-
-            <p class="light">By utilizing elements and principles of Material Design, we were able to create a framework that incorporates components and animations that provide more feedback to users. Additionally, a single underlying responsive system across all platforms allow for a more unified user experience.</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center light-blue-text"><i class="material-icons">settings</i></h2>
-            <h5 class="center">Easy to work with</h5>
-
-            <p class="light">We have provided detailed documentation as well as specific code examples to help new users get started. We are also always open to feedback and can answer any questions a user may have about Materialize.</p>
+          <div class="col s12 m6">
+            <div class="card white darken-1">
+              <div class="card-content black-text">
+                <span class="card-title" style="text-align: start;">단답형</span>
+                <div class="row">
+                  <div class="input-field col s6">
+                    <input id="16" type="text">
+                    <label for="16">16.</label>
+                  </div>
+                  <div class="input-field col s6">
+                    <input id="17" type="text">
+                    <label for="17">17.</label>
+                  </div>
+                  <div class="input-field col s12">
+                    <input id="18a" type="text">
+                    <label for="18a">18 ⓐ.</label>
+                  </div>
+                  <div class="input-field col s12">
+                    <input id="18b" type="text">
+                    <label for="18b">18 ⓑ.</label>
+                  </div>
+                  <div class="input-field col s4">
+                    <input id="19a" type="text">
+                    <label for="19a">19 ⓐ.</label>
+                  </div>
+                  <div class="input-field col s4">
+                    <input id="19b" type="text">
+                    <label for="19b">19 ⓑ.</label>
+                  </div>
+                  <div class="input-field col s4">
+                    <input id="19c" type="text">
+                    <label for="19c">19 ⓒ.</label>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
+      <br>
+      <div class="row center">
+        <a onclick="s3to2()" class="btn-large waves-effect waves-light blue scale-transition"><i class="material-icons left">navigate_before</i>이전</a>
+        <a onclick="getSc()" id="next-button" class="btn-large waves-effect waves-light blue scale-transition">제출<i class="material-icons right">navigate_next</i></a>
+      </div>
+      <div id="modal2" class="modal">
+        <div class="modal-content">
+          <h4 id="modal_title">제출할까요?</h4>
+          <p>제출을 하고 난 이후에는 답안을 수정할 수 없습니다. 잘못 마킹한 부분이 없는지 다시 한번 확인해주세요</p>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="modal-close waves-effect blue-text btn-flat">조금만 있다가 할래요</a>
+          <a onclick="s3to4()" class="modal-close waves-effect blue-text btn-flat">제출할래요</a>
+        </div>
+      </div>
     </div>
-    <br><br>
-  </div-->
+  </div>
+  <div id="step4" class="section no-pad-bot centre">
+    <div class="container">
+      <h1 id="title" class="header center blue-text">지원해 주셔서 감사합니다</h1>
+      <div class="row center">
+        <h5 id="desc" class="header col s12 light">결과는 곧 알려드리겠습니다.</h5>
+      </div>
+      <br>
+    </div>
+  </div>
 
   <!--  Scripts-->
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>

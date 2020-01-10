@@ -30,6 +30,10 @@ form {
   text-align: start;
 }
 
+.tp {
+  opacity: 0;
+}
+
 .centre {
   height: 100vh;
   /* Firefox */
