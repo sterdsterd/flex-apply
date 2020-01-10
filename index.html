@@ -9,23 +9,53 @@
   <link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.6.2/firebase-firestore.js"></script>
+
   <script src="js/josa.js"></script>
 
   <script>
+
+    var firebaseConfig = {
+      apiKey: "AIzaSyB2NfaHGK7CMRaUQhERGwT8o69Sk7E57EM",
+      authDomain: "flex-apply.firebaseapp.com",
+      databaseURL: "https://flex-apply.firebaseio.com",
+      projectId: "flex-apply",
+      storageBucket: "flex-apply.appspot.com",
+      messagingSenderId: "797748555822",
+      appId: "1:797748555822:web:d5b21c35e8ee66395eafbf",
+      measurementId: "G-VRPBYH9DTY"
+    };
+
+    var gr = 0;
+    var cl = 0;
+    var nu = 0;
+    var na = "";
+    var dc = null;
+    var tot = 0;
+    var wrong = "";
+    var sa = "";
+
     $(document).ready(function(){
       $('select').formSelect();
       $('.modal').modal();
+      $('.collapsible').collapsible();
       $("#info").hide();
       $("#step2").hide();
       $("#step3").hide();
       $("#step4").hide();
+      $("#step5").hide();
       $("#step1").hide().fadeIn(500);
+
+      firebase.initializeApp(firebaseConfig);
     });
 
     function s1to2() {
       $("#step1").fadeOut(500);
       $("#step2").delay(400).fadeIn(500);
+      dc = firebase.firestore().collection("answers").doc()
     }
 
     function s2to1() {
@@ -42,11 +72,39 @@
     function s3to2() {
       $("#step3").fadeOut(500);
       $("#step2").delay(400).fadeIn(500);
+      $("#info").fadeOut(500);
     }
 
     function s3to4() {
+      var info = gr + "학년 " + cl + "반 " + nu + "번 " + na
       $("#step3").fadeOut(500);
       $("#step4").delay(400).fadeIn(500);
+
+      var lq1 = document.getElementById("lq1").value;
+      var lq2 = document.getElementById("lq2").value;
+      var lq3 = document.getElementById("lq3").value;
+      
+      dc.set({
+        info: info,
+        lq1: lq1,
+        lq2: lq2,
+        lq3: lq3
+      })
+    }
+
+    function s4to3() {
+      $("#step4").fadeOut(500);
+      $("#step3").delay(400).fadeIn(500);
+    }
+
+    function s4to5() {
+      $("#step4").fadeOut(500);
+      $("#step5").delay(400).fadeIn(500);
+      dc.update({
+        sel: tot,
+        wrong: wrong.substr(0, wrong.length - 2),
+        sa: sa
+      })
     }
 
     function isNum(n) {
@@ -54,10 +112,10 @@
     }
 
     function mod1() {
-        var gr = document.getElementById("grade").options[document.getElementById("grade").selectedIndex].value;
-        var cl = document.getElementById("class").value;
-        var nu = document.getElementById("number").value;
-        var na = document.getElementById("name").value;
+        gr = document.getElementById("grade").options[document.getElementById("grade").selectedIndex].value;
+        cl = document.getElementById("class").value;
+        nu = document.getElementById("number").value;
+        na = document.getElementById("name").value;
 
         var instance = M.Modal.getInstance(document.getElementById("modal1"));
 
@@ -76,31 +134,48 @@
     }
 
     function getSc() {
-      var answer = [2, 2, 4, 3, 4, 2, 3, 3, 4, 5, 4, 3, 2, 5, 4];
-      var score = [1.5, 2.2, 1.6, 1.6, 1.6, 1.8, 1.8, 2.2, 1.9, 2.5, 2.5, 2.3, 2.5, 2.5, 2.5];
-      var tot = 0;
-      for (var i = 1; i <= 15; i++) {
-        if ($('input[name="problem' + i + '"]:checked').val() == answer[i - 1]) tot += score[i - 1];
-      }
-      if ($("#16").val().trim() == "9") tot += 3;
+      var answer2nd = [2, 2, 4, 3, 4, 2, 3, 3, 4, 5, 4, 3, 2, 5, 4];
+      var score2nd = [1.5, 2.2, 1.6, 1.6, 1.6, 1.8, 1.8, 2.2, 1.9, 2.5, 2.5, 2.3, 2.5, 2.5, 2.5];
 
-      if ($("#17").val().trim() == "4") tot += 4;
-      
-      var p18 = 0
-      if ($("#18a").val().replace(/\s/g, "") == "j<=n-i") p18++;
-      if ($("#18b").val().replace(/\s/g, "") == "j<=2*i-1") p18++;
-      if (p18 == 1) tot += 2;
-      else if (p18 == 2) tot += 5;
-      
-      var p19 = 0
-      if ($("#19a").val().replace(/\s/g, "") == "ㅇ") p19++;
-      if ($("#19b").val().replace(/\s/g, "") == "ㅈ") p19++;
-      if ($("#19c").val().replace(/\s/g, "") == "ㅋ") p19++;
-      if (p19 == 1) tot += 2;
-      else if (p19 == 2) tot += 4;
-      else if (p19 == 3) tot += 7;
-      
-      M.toast({html: tot + '점'});
+      var answer1st = [2, 2, 4, 3, 4, 2, 3, 3, 4, 5, 4, 3, 2, 5, 4];
+      var score1st = [1.5, 2.2, 1.6, 1.6, 1.6, 1.8, 1.8, 2.2, 1.9, 2.5, 2.5, 2.3, 2.5, 2.5, 2.5];
+
+      for (var i = 1; i <= 15; i++) {
+        if (gr == 2 && $('input[name="problem' + i + '"]:checked').val() == answer2nd[i - 1]) tot += score2nd[i - 1];
+        else if(gr == 2 && $('input[name="problem' + i + '"]:checked').val() != answer2nd[i - 1]) wrong += i + ", ";
+        if (gr == 1 && $('input[name="problem' + i + '"]:checked').val() == answer1st[i - 1]) tot += score1st[i - 1];
+        else if(gr == 1 && $('input[name="problem' + i + '"]:checked').val() != answer1st[i - 1]) wrong += i + ", ";
+      }
+
+      if (gr == 2) {
+        var q16 = $("#16").val().trim();
+        var q17 = $("#17").val().trim();
+        var q18a = $("#18a").val().replace(/\s/g, "");
+        var q18b = $("#18b").val().replace(/\s/g, "");
+        var q19a = $("#19a").val().replace(/\s/g, "");
+        var q19b = $("#19b").val().replace(/\s/g, "");
+        var q19c = $("#19c").val().replace(/\s/g, "");
+
+        if (q16 == "9") tot += 3;
+
+        if (q17 == "4") tot += 4;
+        
+        var p18 = 0
+        if (q18a == "j<=n-i") p18++;
+        if (q18b == "j<=2*i-1") p18++;
+        if (p18 == 1) tot += 2;
+        else if (p18 == 2) tot += 5;
+        
+        var p19 = 0
+        if (q19a == "ㅇ") p19++;
+        if (q19b == "ㅈ") p19++;
+        if (q19c == "ㅋ") p19++;
+        if (p19 == 1) tot += 2;
+        else if (p19 == 2) tot += 4;
+        else if (p19 == 3) tot += 7;
+
+        sa = q16 + "\n" + q17 + "\n" + q18a + "\n" + q18b + "\n" + q19a + "\n" + q19b + "\n" + q19c; 
+      }
 
       var instance = M.Modal.getInstance(document.getElementById("modal2"));
       instance.open();
@@ -126,6 +201,9 @@
   <div class="section no-pad-bot centre" id="step2">
     <div class="container">
       <h1 class="header center blue-text">인적사항을 입력해주세요</h1>
+      <div class="row center">
+        <h5 id="desc" class="header col s12 light">지금 수집하는 개인정보는 FLEX 입부 시험만을 위해 사용되며, 수집한 정보는 시험이 끝난 직후 바로 파기됩니다.</h5>
+      </div>
       <br>
       <div class="row center">
         <div class="row">
@@ -170,6 +248,52 @@
 
   <div class="section no-pad-bot centre" id="step3">
     <div class="container">
+      <h1 class="header center blue-text">서술형 문항</h1>
+      <div class="row center">
+        <h5 id="desc" class="header col s12 light">지금 제시된 문항은 지원자의 성향 및 성격을 파악하기 위한 질문입니다. 성의껏 답해주세요.</h5>
+      </div>
+      <br>
+      <div class="row center">
+        <ul class="collapsible">
+          <li class="active">
+            <div class="collapsible-header">1. 프로그래밍 경험이 있다면, 사용할 줄 아는 언어와 주로 사용하는 IDE (혹은 텍스트 에디터)를 작성해주세요</div>
+            <div class="collapsible-body">
+              <div class="input-field">
+                <textarea id="lq1" class="materialize-textarea"></textarea>
+                <label for="lq1">이 곳에 작성해주세요</label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header">2. 최근 관심 가지고 있는 IT기술은 무엇인가요?</div>
+            <div class="collapsible-body">
+              <div class="input-field">
+                <textarea id="lq2" class="materialize-textarea"></textarea>
+                <label for="lq2">이 곳에 작성해주세요</label>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="collapsible-header">3. 도전해보고 싶은 프로젝트가 있나요? 있다면 아이디어와 구현 방법을 설명해주세요</div>
+            <div class="collapsible-body">
+              <div class="input-field">
+                <textarea id="lq3" class="materialize-textarea"></textarea>
+                <label for="lq3">이 곳에 작성해주세요</label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <br>
+      <div class="row center">
+        <a id="next-button" onclick="s3to2()" class="btn-large modal-trigger waves-effect waves-light blue"><i class="material-icons left">navigate_before</i>이전</a>
+        <a id="next-button" onclick="s3to4()" class="btn-large modal-trigger waves-effect waves-light blue">다음<i class="material-icons right">navigate_next</i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section no-pad-bot centre" id="step4">
+    <div class="container">
       <h1 class="header center blue-text">답안을 입력해주세요</h1>
       <br>
       <div class="row center">
@@ -182,7 +306,7 @@
                 <div class="row">
                   <div class="col s6">
                     <form action="#">
-                      <p>
+                      <p class="omr">
                         01.
                         <label>
                           <input name="problem1" type="radio" value="1" />
@@ -205,7 +329,7 @@
                           <span>5</span>
                         </label>
                       </p>
-                      <p>
+                      <p class="omr">
                         02.
                         <label>
                           <input name="problem2" type="radio" value="1" />
@@ -228,7 +352,7 @@
                           <span>5</span>
                         </label>
                       </p>
-                      <p>
+                      <p class="omr">
                         03.
                         <label>
                           <input name="problem3" type="radio" value="1" />
@@ -251,7 +375,7 @@
                           <span>5</span>
                         </label>
                       </p>
-                      <p>
+                      <p class="omr">
                         04.
                         <label>
                           <input name="problem4" type="radio" value="1" />
@@ -274,7 +398,7 @@
                           <span>5</span>
                         </label>
                       </p>
-                      <p>
+                      <p class="omr">
                         05.
                         <label>
                           <input name="problem5" type="radio" value="1" />
@@ -298,7 +422,7 @@
                         </label>
                       </p>
                       <hr>
-                      <p>
+                      <p class="omr">
                         06.
                         <label>
                           <input name="problem6" type="radio" value="1" />
@@ -321,7 +445,7 @@
                           <span>5</span>
                         </label>
                       </p>
-                      <p>
+                      <p class="omr">
                         07.
                         <label>
                           <input name="problem7" type="radio" value="1" />
@@ -344,7 +468,7 @@
                           <span>5</span>
                         </label>
                       </p>
-                      <p>
+                      <p class="omr">
                         08.
                         <label>
                           <input name="problem8" type="radio" value="1" />
@@ -367,7 +491,7 @@
                           <span>5</span>
                         </label>
                       </p>
-                      <p>
+                      <p class="omr">
                         09.
                         <label>
                           <input name="problem9" type="radio" value="1" />
@@ -390,7 +514,7 @@
                           <span>5</span>
                         </label>
                       </p>
-                      <p>
+                      <p class="omr">
                         10.
                         <label>
                           <input name="problem10" type="radio" value="1" />
@@ -417,7 +541,7 @@
                   </div>
                   <div class="col s6">
                     <form action="#">
-                      <p>
+                      <p class="omr">
                         11.
                         <label>
                           <input name="problem11" type="radio" value="1" />
@@ -440,7 +564,7 @@
                           <span>5</span>
                         </label>
                       </p>
-                      <p>
+                      <p class="omr">
                         12.
                         <label>
                           <input name="problem12" type="radio" value="1" />
@@ -463,7 +587,7 @@
                           <span>5</span>
                         </label>
                       </p>
-                      <p>
+                      <p class="omr">
                         13.
                         <label>
                           <input name="problem13" type="radio" value="1" />
@@ -486,7 +610,7 @@
                           <span>5</span>
                         </label>
                       </p>
-                      <p>
+                      <p class="omr">
                         14.
                         <label>
                           <input name="problem14" type="radio" value="1" />
@@ -509,7 +633,7 @@
                           <span>5</span>
                         </label>
                       </p>
-                      <p>
+                      <p class="omr">
                         15.
                         <label>
                           <input name="problem15" type="radio" value="1" />
@@ -544,7 +668,7 @@
             <div class="card white darken-1">
               <div class="card-content black-text">
                 <span class="card-title" style="text-align: start;">단답형</span>
-                <div class="row">
+                <div class="row" id="2ndgr">
                   <div class="input-field col s6">
                     <input id="16" type="text">
                     <label for="16">16.</label>
@@ -581,7 +705,7 @@
       </div>
       <br>
       <div class="row center">
-        <a onclick="s3to2()" class="btn-large waves-effect waves-light blue scale-transition"><i class="material-icons left">navigate_before</i>이전</a>
+        <a onclick="s4to3()" class="btn-large waves-effect waves-light blue scale-transition"><i class="material-icons left">navigate_before</i>이전</a>
         <a onclick="getSc()" id="next-button" class="btn-large waves-effect waves-light blue scale-transition">제출<i class="material-icons right">navigate_next</i></a>
       </div>
       <div id="modal2" class="modal">
@@ -591,12 +715,12 @@
         </div>
         <div class="modal-footer">
           <a href="#" class="modal-close waves-effect blue-text btn-flat">조금만 있다가 할래요</a>
-          <a onclick="s3to4()" class="modal-close waves-effect blue-text btn-flat">제출할래요</a>
+          <a onclick="s4to5()" class="modal-close waves-effect blue-text btn-flat">제출할래요</a>
         </div>
       </div>
     </div>
   </div>
-  <div id="step4" class="section no-pad-bot centre">
+  <div id="step5" class="section no-pad-bot centre">
     <div class="container">
       <h1 id="title" class="header center blue-text">지원해 주셔서 감사합니다</h1>
       <div class="row center">
@@ -607,9 +731,16 @@
   </div>
 
   <!--  Scripts-->
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  
   <script src="js/materialize.js"></script>
   <script src="js/init.js"></script>
 
   </body>
+  <footer class="page-footer">
+    <div class="footer-copyright" style="background-color: #424245; box-shadow: 0px -10px 10px 0px rgba(0, 0, 0, 0.01);">
+      <div class="container" style="color: #bbb;">
+      Copyright © 2020 이율원. All rights reserved.
+      </div>
+    </div>
+  </footer>
 </html>

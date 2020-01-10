@@ -20,9 +20,13 @@
 }
 
 body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
   font-family: 'BlackFit', serif;
-  background: rgb(254, 254, 254);
-  background: linear-gradient(135deg, rgba(254, 254, 254, 1) 0%, rgba(228, 229, 230, 1) 100%);
+  background: #fefefe;
+  background: linear-gradient(135deg, #fefefe 35%, #e4eaf1 100%);
+  word-break: keep-all;
 }
 
 form {
@@ -30,12 +34,16 @@ form {
   text-align: start;
 }
 
+.omr {
+  width: 150px;
+}
+
 .tp {
   opacity: 0;
 }
 
 .centre {
-  height: 100vh;
+  min-height: calc(100vh - 50px);
   /* Firefox */
   display: -moz-box;
   -moz-box-pack: center;

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>FLEX</title>
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="../css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="../css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.6.2/firebase-firestore.js"></script>
+
+  <script>
+
+    var firebaseConfig = {
+      apiKey: "AIzaSyB2NfaHGK7CMRaUQhERGwT8o69Sk7E57EM",
+      authDomain: "flex-apply.firebaseapp.com",
+      databaseURL: "https://flex-apply.firebaseio.com",
+      projectId: "flex-apply",
+      storageBucket: "flex-apply.appspot.com",
+      messagingSenderId: "797748555822",
+      appId: "1:797748555822:web:d5b21c35e8ee66395eafbf",
+      measurementId: "G-VRPBYH9DTY"
+    };
+
+    $(document).ready(function(){
+      $('.collapsible').collapsible();
+      firebase.initializeApp(firebaseConfig);
+    });
+
+  </script>
+</head>
+<body>
+  <div id="info" style="background-color: rgba(0, 0, 0, 0.01); box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.075);">
+    <p style="padding: 1em; margin: 0;" id="infotx"><i class="material-icons left">track_changes</i>FLEX 입부 시험 모니터링</p>
+  </div>
+  <div id="step1" class="section no-pad-bot centre" style="min-height: calc(100vh - 100px);">
+    <div class="container">
+      <h1 id="title" class="header center blue-text">모니터링</h1>
+      <div class="row center">
+        <h5 id="desc" class="header col s12 light">FLEX 입부 시험의 결과를 확인할 수 있어요</h5>
+      </div>
+      <br>
+      <div class="row">
+        <ul class="collapsible col s12 m6" style="padding-right: 1em;">
+          <li class="active">
+            <div class="collapsible-header">1학년 뭐시기 뭐시기</div>
+            <div class="collapsible-body" style="padding: 0 1em;">
+              <table>
+                <tbody>
+                  <tr><td>서술형 1</td><td>0</td></tr>
+                  <tr><td>서술형 2</td><td>Jellybean</td></tr>
+                  <tr><td>서술형 3</td><td>$7.00</td></tr>
+                  <tr><td>점수 합</td><td>$7.00</td></tr>
+                  <tr><td>오답</td><td>$7.00</td></tr>
+                  <tr><td>단답형 답</td><td>$7.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </li>
+        </ul>
+        <ul class="collapsible col s12 m6" style="padding-left: 1em;">
+          <li class="active">
+            <div class="collapsible-header">2학년 뭐시기 뭐시기</div>
+            <div class="collapsible-body" style="padding: 0 1em;">
+              <table>
+                <tbody>
+                  <tr><td>서술형 1</td><td>0</td></tr>
+                  <tr><td>서술형 2</td><td>Jellybean</td></tr>
+                  <tr><td>서술형 3</td><td>$7.00</td></tr>
+                  <tr><td>점수 합</td><td>$7.00</td></tr>
+                  <tr><td>오답</td><td>$7.00</td></tr>
+                  <tr><td>단답형 답</td><td>$7.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!--  Scripts-->
+  
+  <script src="../js/materialize.js"></script>
+  <script src="../js/init.js"></script>
+
+  </body>
+  <footer class="page-footer">
+    <div class="footer-copyright" style="background-color: #424245; box-shadow: 0px -10px 10px 0px rgba(0, 0, 0, 0.01);">
+      <div class="container" style="color: #bbb;">
+      Copyright © 2020 이율원. All rights reserved.
+      </div>
+    </div>
+  </footer>
+</html>
