@@ -41,8 +41,10 @@
     $(document).ready(function(){
       $('select').formSelect();
       $('.modal').modal();
-      $('.collapsible').collapsible();
-      $("#info").hide();
+      var elem = document.querySelector('.collapsible.expandable');
+      var instance = M.Collapsible.init(elem, {
+        accordion: false
+      });
       $("#step2").hide();
       $("#step3").hide();
       $("#step4").hide();
@@ -50,6 +52,7 @@
       $("#step1").hide().fadeIn(500);
 
       firebase.initializeApp(firebaseConfig);
+            
     });
 
     function s1to2() {
@@ -67,6 +70,8 @@
       $("#step2").fadeOut(500);
       $("#step3").delay(400).fadeIn(500);
       $("#info").delay(400).fadeIn(500);
+      document.getElementById("infotx").innerHTML = '<i class="material-icons left">person</i>' + gr + "학년 " + cl + "반 " + nu + "번 " + na;
+
     }
 
     function s3to2() {
@@ -91,7 +96,8 @@
         lq3: lq3,
         sel: "아직 답안을 제출하지 않았어요",
         wrong: "아직 답안을 제출하지 않았어요",
-        sa: "아직 답안을 제출하지 않았어요"
+        sa: "아직 답안을 제출하지 않았어요",
+        note: ""
       })
     }
 
@@ -128,8 +134,7 @@
           M.toast({html: '학반과 번호는 숫자로만 입력해주세요'});
         } else {
           document.getElementById("modal_title").innerText = gr + "학년 " + cl + "반 " + nu + "번 " + Josa.r(na, '이가') + " 맞나요?";
-          document.getElementById("infotx").innerHTML = '<i class="material-icons left">person</i>' + gr + "학년 " + cl + "반 " + nu + "번 " + na;
-
+          
           instance.open();
 
         }
@@ -144,10 +149,16 @@
       var score1st = [1.5, 2.2, 1.6, 1.6, 1.6, 1.8, 1.8, 2.2, 1.9, 2.5, 2.5, 2.3, 2.5, 2.5, 2.5];
 
       for (var i = 1; i <= 15; i++) {
-        if (gr == 2 && $('input[name="problem' + i + '"]:checked').val() == answer2nd[i - 1]) tot += score2nd[i - 1];
-        else if(gr == 2 && $('input[name="problem' + i + '"]:checked').val() != answer2nd[i - 1]) wrong += "[" + i + "] " + $('input[name="problem' + i + '"]:checked').val() + "<br>";
-        if (gr == 1 && $('input[name="problem' + i + '"]:checked').val() == answer1st[i - 1]) tot += score1st[i - 1];
-        else if(gr == 1 && $('input[name="problem' + i + '"]:checked').val() != answer1st[i - 1]) wrong += "[" + i + "] " + $('input[name="problem' + i + '"]:checked').val() + "<br>";
+        if (gr == 2 && $('input[name="problem' + i + '"]:checked').val() == answer2nd[i - 1])
+          tot += score2nd[i - 1];
+        else if (gr == 2 && $('input[name="problem' + i + '"]:checked').val() != answer2nd[i - 1])
+          if ($('input[name="problem' + i + '"]:checked').val() == null) wrong += "[" + i + "] 선택하지 않음<br>"
+          else wrong += "[" + i + "] " + $('input[name="problem' + i + '"]:checked').val() + "<br>";
+        if (gr == 1 && $('input[name="problem' + i + '"]:checked').val() == answer1st[i - 1])
+          tot += score1st[i - 1];
+        else if (gr == 1 && $('input[name="problem' + i + '"]:checked').val() != answer1st[i - 1])
+          if ($('input[name="problem' + i + '"]:checked').val() == null) wrong += "[" + i + "] 선택하지 않음<br>"
+          else wrong += "[" + i + "] " + $('input[name="problem' + i + '"]:checked').val() + "<br>";
       }
 
       if (gr == 2) {
@@ -177,7 +188,7 @@
         else if (p19 == 2) tot += 4;
         else if (p19 == 3) tot += 7;
 
-        sa = q16 + "<br>" + q17 + "<br>" + q18a + "<br>" + q18b + "<br>" + q19a + "<br>" + q19b + "<br>" + q19c; 
+        sa = "[16] " + q16 + "<br>[17] " + q17 + "<br>[18] " + q18a + ", " + q18b + "<br>[19] " + q19a + ", " + q19b + ", " + q19c; 
       }
 
       var instance = M.Modal.getInstance(document.getElementById("modal2"));
@@ -187,7 +198,8 @@
 </head>
 <body>
   <div id="info" class="sterdnav">
-    <p style="padding: 1em; margin: 0;" id="infotx"></p>
+    <p style="padding: 1em; float: left;" class="navmar"><i class="material-icons left">assessment</i>FLEX 입부 시험</p>
+    <p style="padding: 1em; float: right;" class="navmar-r" id="infotx"></p>
   </div>
   <div id="step1" class="section no-pad-bot centre">
     <div class="container">
@@ -251,35 +263,36 @@
 
   <div class="section no-pad-bot centre" id="step3">
     <div class="container">
+      <br><br><br><br>
       <h1 class="header center blue-text">서술형 문항</h1>
       <div class="row center">
         <h5 id="desc" class="header col s12 light">지금 제시된 문항은 지원자의 성향 및 성격을 파악하기 위한 질문입니다. 성의껏 답해주세요.</h5>
       </div>
       <br>
       <div class="row center">
-        <ul class="collapsible">
+        <ul class="collapsible expandable">
           <li class="active">
             <div class="collapsible-header">1. 프로그래밍 경험이 있다면, 사용할 줄 아는 언어와 주로 사용하는 IDE (혹은 텍스트 에디터)를 작성해주세요</div>
-            <div class="collapsible-body">
-              <div class="input-field">
+            <div class="collapsible-body" style="padding: 1.5em 2em;">
+              <div class="input-field" style="margin: 0;">
                 <textarea id="lq1" class="materialize-textarea"></textarea>
                 <label for="lq1">이 곳에 작성해주세요</label>
               </div>
             </div>
           </li>
-          <li>
+          <li class="active">
             <div class="collapsible-header">2. 최근 관심 가지고 있는 IT기술은 무엇인가요?</div>
-            <div class="collapsible-body">
-              <div class="input-field">
+            <div class="collapsible-body" style="padding: 1.5em 2em;">
+              <div class="input-field" style="margin: 0;">
                 <textarea id="lq2" class="materialize-textarea"></textarea>
                 <label for="lq2">이 곳에 작성해주세요</label>
               </div>
             </div>
           </li>
-          <li>
+          <li class="active">
             <div class="collapsible-header">3. 도전해보고 싶은 프로젝트가 있나요? 있다면 아이디어와 구현 방법을 설명해주세요</div>
-            <div class="collapsible-body">
-              <div class="input-field">
+            <div class="collapsible-body" style="padding: 1.5em 2em;">
+              <div class="input-field" style="margin: 0;">
                 <textarea id="lq3" class="materialize-textarea"></textarea>
                 <label for="lq3">이 곳에 작성해주세요</label>
               </div>
@@ -297,6 +310,7 @@
 
   <div class="section no-pad-bot centre" id="step4">
     <div class="container">
+      <br><br><br><br>
       <h1 class="header center blue-text">답안을 입력해주세요</h1>
       <br>
       <div class="row center">

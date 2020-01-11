@@ -2043,15 +2043,17 @@ $jscomp.polyfill = function (e, r, p, m) {
             display: 'block',
             overflow: 'hidden',
             height: 0,
-            paddingTop: '',
-            paddingBottom: ''
+            paddingTop: '0.5em',
+            paddingLeft: '1.5em',
+            paddingBottom: '0em',
+            paddingRight: '1.5em',
           });
 
           var pTop = $body.css('padding-top');
           var pBottom = $body.css('padding-bottom');
           var finalHeight = $body[0].scrollHeight;
           $body.css({
-            paddingTop: 0,
+            paddingTop: 0.5,
             paddingBottom: 0
           });
 
@@ -2065,8 +2067,10 @@ $jscomp.polyfill = function (e, r, p, m) {
             complete: function (anim) {
               $body.css({
                 overflow: '',
-                paddingTop: '',
-                paddingBottom: '',
+                paddingTop: '0.5em',
+                paddingLeft: '1.5em',
+                paddingBottom: '0em',
+                paddingRight: '1.5em',
                 height: ''
               });
 
@@ -2097,7 +2101,7 @@ $jscomp.polyfill = function (e, r, p, m) {
           anim({
             targets: $body[0],
             height: 0,
-            paddingTop: 0,
+            paddingTop: 0.5,
             paddingBottom: 0,
             duration: this.options.outDuration,
             easing: 'easeInOutCubic',
@@ -2105,7 +2109,10 @@ $jscomp.polyfill = function (e, r, p, m) {
               $body.css({
                 height: '',
                 overflow: '',
-                padding: '',
+                paddingTop: '0.5em',
+                paddingLeft: '1.5em',
+                paddingBottom: '0em',
+                paddingRight: '1.5em',
                 display: ''
               });
 

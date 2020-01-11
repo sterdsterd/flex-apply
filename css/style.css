@@ -42,12 +42,36 @@ form {
   z-index: 100;
 }
 
+.navmar .navmar-r {
+  padding: 1em;
+  margin: 0;
+}
+
 
 @supports ((-webkit-backdrop-filter: initial) or(backdrop-filter: initial)) {
   .sterdnav {
       -webkit-backdrop-filter: saturate(180%) blur(10px);
       backdrop-filter: saturate(180%) blur(10px);
   }
+}
+
+@media only screen and (min-width: 601px) {
+  .navmar {
+    padding: 1em;
+    margin: 0 0 0 10%;
+  }
+
+  .navmar-r {
+    padding: 1em;
+    margin: 0 10% 0 0;
+  }
+}
+
+.collapsible-footer {
+  border-bottom: 1px solid #ddd;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 0em;
 }
 
 .omr {
