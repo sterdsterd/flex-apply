@@ -27,59 +27,75 @@
       measurementId: "G-VRPBYH9DTY"
     };
 
+    var ev = null;
     $(document).ready(function(){
       $('.collapsible').collapsible();
       firebase.initializeApp(firebaseConfig);
-    });
 
+      $('#live').change(function(){
+        if ($(this).is(':checked')) {
+          ev = firebase.firestore().collection("answers").orderBy("sel", "desc").onSnapshot(function(querySnapshot) {
+            document.getElementById("primero").innerHTML = "";
+            document.getElementById("segundo").innerHTML = "";
+            querySnapshot.forEach(function(childSnapshot) {
+              last = childSnapshot.id;
+              M.toast({html: last});
+              var sel = "";
+              var sa = "";
+              var wrong ="";
+              if (childSnapshot.data()["sel"] != null) sel = childSnapshot.data()["sel"];
+              if (childSnapshot.data()["sa"] != null) sa = childSnapshot.data()["sa"];
+              if (childSnapshot.data()["wrong"] != null) wrong = childSnapshot.data()["wrong"];
+
+              ss = String.raw`<div class="card white darken-1">
+                <div class="card-content black-text">
+                  <span class="card-title" style="float: left;">` + childSnapshot.data()["info"] + String.raw`</span>
+                  <p style="float:right; padding-top: 0.5em;"><label><input type="checkbox" ` + 'id="' + last + String.raw`"/><span>서술형 검토 완료</span></label></p>
+                  <table>
+                    <tbody>
+                      <tr><td style="width: 20%">서술형 1</td><td>` + childSnapshot.data()["lq1"] + String.raw`</td></tr>
+                      <tr><td>서술형 2</td><td>` + childSnapshot.data()["lq2"] + String.raw`</td></tr>
+                      <tr><td>서술형 3</td><td>` + childSnapshot.data()["lq3"] + String.raw`</td></tr>
+                      <tr><td>점수 합</td><td>` + sel + String.raw`</td></tr>
+                      <tr><td>오답</td><td>` + wrong + String.raw`</td></tr>
+                      <tr><td>단답형 답</td><td>` + sa + String.raw`</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>`
+              if (childSnapshot.data()["info"].startsWith("1학년")) document.getElementById("primero").innerHTML += ss;
+              else document.getElementById("segundo").innerHTML += ss;
+            });
+          });
+        } else {
+          ev();
+        }
+      });
+
+      $('#live').trigger("click");
+    });
   </script>
 </head>
 <body>
-  <div id="info" style="background-color: rgba(0, 0, 0, 0.01); box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.075);">
-    <p style="padding: 1em; margin: 0;" id="infotx"><i class="material-icons left">track_changes</i>FLEX 입부 시험 모니터링</p>
+  <div id="info" class="sterdnav">
+    <p style="padding: 1em; margin: 0; float: left;"><i class="material-icons left">track_changes</i>FLEX 입부 시험 모니터링</p>
+    <p style="float:right; padding-right: 1em;"><label><input type="checkbox" id="live"/><span>실시간 업데이트</span></label></p>
   </div>
   <div id="step1" class="section no-pad-bot centre" style="min-height: calc(100vh - 100px);">
     <div class="container">
+      <br>
+      <br>
+      <br>
       <h1 id="title" class="header center blue-text">모니터링</h1>
       <div class="row center">
         <h5 id="desc" class="header col s12 light">FLEX 입부 시험의 결과를 확인할 수 있어요</h5>
       </div>
       <br>
       <div class="row">
-        <ul class="collapsible col s12 m6" style="padding-right: 1em;">
-          <li class="active">
-            <div class="collapsible-header">1학년 뭐시기 뭐시기</div>
-            <div class="collapsible-body" style="padding: 0 1em;">
-              <table>
-                <tbody>
-                  <tr><td>서술형 1</td><td>0</td></tr>
-                  <tr><td>서술형 2</td><td>Jellybean</td></tr>
-                  <tr><td>서술형 3</td><td>$7.00</td></tr>
-                  <tr><td>점수 합</td><td>$7.00</td></tr>
-                  <tr><td>오답</td><td>$7.00</td></tr>
-                  <tr><td>단답형 답</td><td>$7.00</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </li>
-        </ul>
-        <ul class="collapsible col s12 m6" style="padding-left: 1em;">
-          <li class="active">
-            <div class="collapsible-header">2학년 뭐시기 뭐시기</div>
-            <div class="collapsible-body" style="padding: 0 1em;">
-              <table>
-                <tbody>
-                  <tr><td>서술형 1</td><td>0</td></tr>
-                  <tr><td>서술형 2</td><td>Jellybean</td></tr>
-                  <tr><td>서술형 3</td><td>$7.00</td></tr>
-                  <tr><td>점수 합</td><td>$7.00</td></tr>
-                  <tr><td>오답</td><td>$7.00</td></tr>
-                  <tr><td>단답형 답</td><td>$7.00</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </li>
-        </ul>
+        <div class="col s12 m6" id="primero">
+        </div>
+        <div class="col s12 m6" id="segundo">
+        </div>
       </div>
     </div>
   </div>
