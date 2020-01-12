@@ -24,9 +24,10 @@ body {
   min-height: 100vh;
   flex-direction: column;
   font-family: 'BlackFit', serif;
-  background: #fefefe;
-  background: linear-gradient(135deg, #fefefe 35%, #e4eaf1 100%);
+  background: linear-gradient(135deg, rgba(254, 254, 254, 0.95) 35%, rgba(228, 234, 241, 0.95) 100%), url('../img/resized\ code-coding-computer-330771_1920x1080.jpg');
   word-break: keep-all;
+  -webkit-backdrop-filter: saturate(50%) blur(5px);
+  backdrop-filter: saturate(50%) blur(3px);
 }
 
 form {
@@ -36,7 +37,7 @@ form {
 
 .sterdnav {
   background-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0px 10px 20px 0px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
   position: fixed;
   width: 100vw;
   z-index: 100;
