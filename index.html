@@ -50,6 +50,7 @@
       $("#step4").hide();
       $("#step5").hide();
       $("#step1").hide().fadeIn(500);
+      $("#info").hide();
 
       firebase.initializeApp(firebaseConfig);
             
@@ -58,7 +59,9 @@
     function s1to2() {
       $("#step1").fadeOut(500);
       $("#step2").delay(400).fadeIn(500);
+      $("#info").delay(400).fadeIn(500);
       dc = firebase.firestore().collection("answers").doc()
+      $("footer").fadeOut(500);
     }
 
     function s2to1() {
@@ -203,21 +206,21 @@
   </div>
   <div id="step1" class="section no-pad-bot centre">
     <div class="container">
-      <h1 id="title" class="header center blue-text">환영합니다</h1>
-      <div class="row center">
-        <h5 id="desc" class="header col s12 light">FLEX 입부 시험</h5>
+      <h1 id="title" class="header blue-text" style="padding: 0 0.75rem; margin: 0;" >환영합니다</h1>
+      <div class="row">
+        <h5 id="desc" class="header col s12 light" style="color: #777">FLEX 입부 시험</h5>
       </div>
       <br>
-      <div class="row center">
+      <div class="row" style="padding: 0 0.75rem; margin: 0 0 0 0;">
         <a onclick="s1to2()" id="start-button" class="btn-large waves-effect waves-light blue">시작하기<i class="material-icons right">navigate_next</i></a>
       </div>
     </div>
   </div>
   <div class="section no-pad-bot centre" id="step2">
     <div class="container">
-      <h1 class="header center blue-text">인적사항을 입력해주세요</h1>
-      <div class="row center">
-        <h5 id="desc" class="header col s12 light">지금 수집하는 개인정보는 FLEX 입부 시험만을 위해 사용되며, 수집한 정보는 시험이 끝난 직후 바로 파기됩니다.</h5>
+      <h1 class="header blue-text" style="padding: 0 0.25rem; margin: 1.5em 0 0 0;">인적사항을 입력해주세요</h1>
+      <div class="row">
+        <h5 id="desc" class="header col s12 light" style="color: #777">지금 수집하는 개인정보는 FLEX 입부 시험만을 위해 사용되며, 수집한 정보는 시험이 끝난 직후 바로 파기됩니다.</h5>
       </div>
       <br>
       <div class="row center">
@@ -263,16 +266,15 @@
 
   <div class="section no-pad-bot centre" id="step3">
     <div class="container">
-      <br><br><br><br>
-      <h1 class="header center blue-text">서술형 문항</h1>
-      <div class="row center">
+      <h1 class="header blue-text" style="padding: 0 0.75rem; margin: 2em 0 0 0;">서술형 문항</h1>
+      <div class="row">
         <h5 id="desc" class="header col s12 light">지금 제시된 문항은 지원자의 성향 및 성격을 파악하기 위한 질문입니다. 성의껏 답해주세요.</h5>
       </div>
       <br>
       <div class="row center">
         <ul class="collapsible expandable">
           <li class="active">
-            <div class="collapsible-header">1. 프로그래밍 경험이 있다면, 사용할 줄 아는 언어와 주로 사용하는 IDE (혹은 텍스트 에디터)를 작성해주세요</div>
+            <div class="collapsible-header" style="pointer-events:none;">1. 프로그래밍 경험이 있다면, 사용할 줄 아는 언어와 주로 사용하는 IDE (혹은 텍스트 에디터)를 작성해주세요</div>
             <div class="collapsible-body" style="padding: 1.5em 2em;">
               <div class="input-field" style="margin: 0;">
                 <textarea id="lq1" class="materialize-textarea"></textarea>
@@ -281,7 +283,7 @@
             </div>
           </li>
           <li class="active">
-            <div class="collapsible-header">2. 최근 관심 가지고 있는 IT기술은 무엇인가요?</div>
+            <div class="collapsible-header" style="pointer-events:none;">2. 최근 관심 가지고 있는 IT기술은 무엇인가요?</div>
             <div class="collapsible-body" style="padding: 1.5em 2em;">
               <div class="input-field" style="margin: 0;">
                 <textarea id="lq2" class="materialize-textarea"></textarea>
@@ -290,7 +292,7 @@
             </div>
           </li>
           <li class="active">
-            <div class="collapsible-header">3. 도전해보고 싶은 프로젝트가 있나요? 있다면 아이디어와 구현 방법을 설명해주세요</div>
+            <div class="collapsible-header" style="pointer-events:none;">3. 도전해보고 싶은 프로젝트가 있나요? 있다면 아이디어와 구현 방법을 설명해주세요</div>
             <div class="collapsible-body" style="padding: 1.5em 2em;">
               <div class="input-field" style="margin: 0;">
                 <textarea id="lq3" class="materialize-textarea"></textarea>
@@ -305,14 +307,16 @@
         <a id="next-button" onclick="s3to2()" class="btn-large modal-trigger waves-effect waves-light blue"><i class="material-icons left">navigate_before</i>이전</a>
         <a id="next-button" onclick="s3to4()" class="btn-large modal-trigger waves-effect waves-light blue">다음<i class="material-icons right">navigate_next</i></a>
       </div>
+      <br>
+      <br>
+      <br>
+      <br>
     </div>
   </div>
 
   <div class="section no-pad-bot centre" id="step4">
     <div class="container">
-      <br><br><br><br>
-      <h1 class="header center blue-text">답안을 입력해주세요</h1>
-      <br>
+      <h1 class="header blue-text" style="padding: 0 0.75rem; margin: 2em 0 1em 0;">답안을 입력해주세요</h1>
       <div class="row center">
         <div class="row">
           <div class="col s12 m6">
@@ -739,8 +743,8 @@
   </div>
   <div id="step5" class="section no-pad-bot centre">
     <div class="container">
-      <h1 id="title" class="header center blue-text">지원해 주셔서 감사합니다</h1>
-      <div class="row center">
+      <h1 id="title" class="header blue-text" style="padding: 0 0.75rem; margin: 0;">지원해 주셔서 감사합니다</h1>
+      <div class="row">
         <h5 id="desc" class="header col s12 light">결과는 곧 알려드리겠습니다.</h5>
       </div>
       <br>
@@ -753,11 +757,9 @@
   <script src="js/init.js"></script>
 
   </body>
-  <footer class="page-footer">
-    <div class="footer-copyright" style="background-color: #424245; box-shadow: 0px -10px 10px 0px rgba(0, 0, 0, 0.01);">
-      <div class="container" style="color: #bbb;">
-      Copyright © 2020 이율원. All rights reserved.
-      </div>
+  <footer class="footer" id="footer">
+    <div class="container navmar" style="color: #fff;">
+    Copyright © 2020 이율원. All rights reserved.
     </div>
   </footer>
 </html>

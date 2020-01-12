@@ -42,7 +42,12 @@ form {
   z-index: 100;
 }
 
-.navmar .navmar-r {
+.navmar {
+  padding: 1em;
+  margin: 0;
+}
+
+.navmar-r {
   padding: 1em;
   margin: 0;
 }
@@ -50,8 +55,12 @@ form {
 
 @supports ((-webkit-backdrop-filter: initial) or(backdrop-filter: initial)) {
   .sterdnav {
-      -webkit-backdrop-filter: saturate(180%) blur(10px);
-      backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    backdrop-filter: saturate(180%) blur(10px);
+  }
+  .footer {
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    backdrop-filter: saturate(180%) blur(10px);
   }
 }
 
@@ -68,10 +77,21 @@ form {
 }
 
 .collapsible-footer {
+  background-color: #fdfdfd;
   border-bottom: 1px solid #ddd;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  padding: 0em;
+  padding: 0.5em 0 0 0;
+}
+
+.footer {
+  background-color: rgba(66, 66, 69, 0.7);
+  box-shadow: 0px -10px 10px 0px rgba(0, 0, 0, 0.01);
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  z-index: 100;
 }
 
 .omr {

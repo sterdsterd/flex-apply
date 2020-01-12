@@ -75,9 +75,8 @@
                     </table>
                   </div>
                   <div class="collapsible-footer">
-                    <div class="input-field" style="margin: 1.5em 1.5em 0 1.5em;">
-                      <textarea onfocus="foc()" onblur="blr()" oninput="note('` + last + String.raw`')" id="_` + last + String.raw`" class="materialize-textarea">` + childSnapshot.data()["note"] + String.raw`</textarea>
-                      <label for="lq1">노트</label>
+                    <div class="input-field" style="margin: 0 1.5em">
+                      <textarea placeholder="노트" onfocus="foc()" onblur="blr()" oninput="note('` + last + String.raw`')" id="_` + last + String.raw`" class="materialize-textarea">` + childSnapshot.data()["note"] + String.raw`</textarea>
                     </div>
                   </div>
                 </li>`
@@ -100,13 +99,12 @@
 <body>
   <div id="info" class="sterdnav">
     <p style="padding: 1em; float: left;" class="navmar"><i class="material-icons left">trending_up</i>FLEX 입부 시험 모니터링</p>
-    <p style="float:right; padding-right: 1em;"><label><input type="checkbox" id="live"/><span>실시간 업데이트</span></label></p>
+    <p style="float:right;" class="navmar-r"><label><input type="checkbox" id="live"/><span>실시간 업데이트</span></label></p>
   </div>
   <div id="step1" class="section no-pad-bot centre" style="min-height: calc(100vh - 50px);">
     <div class="container">
-      <br><br><br><br>
-      <h1 id="title" class="header center blue-text">모니터링</h1>
-      <div class="row center">
+      <h1 id="title" class="header blue-text" style="padding: 0 0.75rem; margin: 2em 0 0 0;">모니터링</h1>
+      <div class="row">
         <h5 id="desc" class="header col s12 light">FLEX 입부 시험의 결과를 확인할 수 있어요</h5>
       </div>
       <br>
@@ -120,6 +118,9 @@
           </ul>
         </div>
       </div>
+      <br>
+      <br>
+      <br>
     </div>
   </div>
 
@@ -129,11 +130,9 @@
   <script src="../js/init.js"></script>
 
   </body>
-  <footer class="page-footer">
-    <div class="footer-copyright" style="background-color: #424245; box-shadow: 0px -10px 10px 0px rgba(0, 0, 0, 0.01);">
-      <div class="container" style="color: #bbb;">
-      Copyright © 2020 이율원. All rights reserved.
-      </div>
+  <footer class="footer">
+    <div class="container navmar" style="color: rgba(255, 255, 255, 0.85);">
+    Copyright © 2020 이율원. All rights reserved.
     </div>
   </footer>
 </html>
